@@ -65,7 +65,7 @@ class TraitElement extends Element
     {
         $element = new ElementBuilder($code . "\n");
         $this->addBodyElement($element);
-        $this->setName($element->tokens[3][1]);
+        $this->setName($element->tokens[3][0]);
     }
 
     /**

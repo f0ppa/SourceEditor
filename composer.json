@@ -1,9 +1,9 @@
 {
-    "name": "docdigital/php-class-editor",
+    "name": "f0ppa/SourceEditor",
     "license": "MIT",
     "description": "Library to tokenize, edit and override PHP classes",
     "require": {
-       
+
     },
     "authors": [
         {
@@ -15,6 +15,6 @@
         "psr-0": { "DocDigital\\Lib\\SourceEditor": "" }
     },
     "target-dir": "DocDigital/Lib/SourceEditor",
-    "extra": {},            
+    "extra": {},
     "minimum-stability": "dev"
 }
