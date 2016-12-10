@@ -13,9 +13,9 @@ namespace DocDigital\Lib\SourceEditor\ClassStructure;
  *     <element method>
  *         <docBlock/>
  *     </element >
- * </elemnet> 
+ * </elemnet>
  * </pre>
- * 
+ *
  * Be ware that the {@link self::render()} with $raw set to true is useful as long as you don't add
  * new elements to any collection, as the added element is not inserted in the flat
  * elements collection thats used in the raw strategy. I.e. if you invoke {@link self::addUse()}
@@ -26,19 +26,19 @@ namespace DocDigital\Lib\SourceEditor\ClassStructure;
  * @see \DocDigital\Lib\SourceEditor\PhpClassEditor
  * @see Element
  */
-class ClassElement extends Element 
+class ClassElement extends Element
 {
     /**
      * Class Name
-     * 
-     * @var string 
+     *
+     * @var string
      */
     private $name;
-    
+
     /**
      * This node contains other nodes:
      *  constants.
-     * 
+     *
      * @var string[]
      */
     private $traits = array();
@@ -46,61 +46,61 @@ class ClassElement extends Element
     /**
      * This node contains other nodes:
      *  constants.
-     * 
+     *
      * @var Element[]
      */
     private $constants = array();
-    
+
     /**
      * This node contains other nodes:
      *   attributes.
-     * 
+     *
      * @var Element[]
      */
     private $attributes = array();
-    
+
     /**
      * This node contains other nodes:
      *  Methods.
-     * 
+     *
      * @var Element[]
      */
     private $methods = array();
-    
+
     /**
-     * Class Use statements, included namespaces 
-     * 
+     * Class Use statements, included namespaces
+     *
      * @var string[]
      */
     private $classDeps;
-    
+
     /**
      * Single Line class parts
-     * @var string 
+     * @var string
      */
     private $classDefLine;
     private $namespace;
-    
+
     /**
      * Namespace
-     * 
+     *
      * @param type $nameSpaceLine
      */
     public function setNameSpace($nameSpaceLine)
     {
         $this->namespace = $nameSpaceLine;
     }
-    
+
     /**
      * Dependencies
-     * 
+     *
      * @param type $use
      */
     public function addUse($use)
     {
         $this->classDeps[] = $use;
     }
-    
+
     /**
      * Traits
      *
@@ -114,10 +114,19 @@ class ClassElement extends Element
         ($trait->getParentClass() !== $this) && $trait->setParentClass($this);
         $this->traits[] = $trait;
     }
-    
+
+    /**
+     * Resets current traits
+     * @return void
+     */
+    public function resetTraits()
+    {
+        $this->traits = [];
+    }
+
     /**
      * TODO: only works with lowercase 'implements' if already has interfaces.
-     * 
+     *
      * @param string $interface
      */
     public function addInterface($interface)
@@ -128,36 +137,36 @@ class ClassElement extends Element
         $interfaceParts[] = $interface;
         $this->classDefLine = implode(' implements ', array($classAndParent, implode(', ', $interfaceParts)));
     }
-    
+
     /**
      * Add DockBlock
-     * 
+     *
      * @param DocBlock $docBlock
      */
     public function setClassDef($classLine)
     {
         $this->classDefLine = $classLine;
     }
-    
+
     /**
      * Adds a Method definition to this class representation
-     * 
+     *
      * @param MethodElement $method
-     * 
+     *
      * @return void.
      */
     public function addMethod(MethodElement $method, $docBlock = null)
     {
         ($method->getParentClass() !== $this) && $method->setParentClass($this);
-        $this->methods[$method->getName()] = $method; 
+        $this->methods[$method->getName()] = $method;
     }
 
     /**
      * Adds an Attribute definition to this class representation
-     * 
-     * @param AttributeElement|string $attr Either the literal PHP code or an 
+     *
+     * @param AttributeElement|string $attr Either the literal PHP code or an
      * AttributeElement object.
-     * 
+     *
      * @return void.
      */
     public function addAttribute($attr, $docBlock = null)
@@ -171,13 +180,13 @@ class ClassElement extends Element
     }
 
     /**
-     * Adds a Const definition to this class representation, const could be provided also 
+     * Adds a Const definition to this class representation, const could be provided also
      * as a string containing the line of source code that holds the "const ... ;" code.
      * In this case $name should be given.
-     * 
-     * @param ConstantElement|string $const The ConstElement ready for adition or 
+     *
+     * @param ConstantElement|string $const The ConstElement ready for adition or
      * the const line of code;
-     * 
+     *
      * @return void.
      */
     public function addConst($const, $docBlock = null)
@@ -187,14 +196,14 @@ class ClassElement extends Element
             $const->addDocBlock($docBlock);
         }
         ($const->getParentClass() !== $this) && $const->setParentClass($this);
-        $this->constants[] = $const; 
+        $this->constants[] = $const;
     }
-    
+
     /**
      * Returns the method definiton after $name
-     * 
+     *
      * @param string $name
-     * 
+     *
      * @return MethodElement The requested method definition
      */
     public function getMethod($name)
@@ -204,12 +213,12 @@ class ClassElement extends Element
         }
         return $this->methods[$name];
     }
-    
+
     /**
      * Returns the attribute definiton after $name
-     * 
+     *
      * @param string $name
-     * 
+     *
      * @return AttributeElement The requested method definition
      */
     public function getAttribute($name)
@@ -219,10 +228,10 @@ class ClassElement extends Element
         }
         return $this->attributes[$name];
     }
-    
+
     /**
-     * Returns class name 
-     * 
+     * Returns class name
+     *
      * @return string
      */
     public function getName()
@@ -232,20 +241,20 @@ class ClassElement extends Element
 
     /**
      * sets class name.
-     * 
+     *
      * @param string $name
      */
     public function setName($name)
     {
         $this->name = $name;
     }
-    
+
     /**
      * Renders this entire class.
-     * 
+     *
      * Be ware that the {@link self::render()} with $raw set to true is useful as long as you don't add
      * new elements to any collection
-     * 
+     *
      * @param bool $raw If true renders ElementBuilder present in flat array of elements,
      * respecting gaps, spaces and non Doc comments (//). if fasle, renders in order.
      *
@@ -271,7 +280,7 @@ class ClassElement extends Element
     /**
      * Renders the class body. If it gets to this point, then its not a raw render.
      */
-    private function renderBody() 
+    private function renderBody()
     {
         $traits = $this->renderTraits();
         $consts = $this->renderConstants();
@@ -282,7 +291,7 @@ class ClassElement extends Element
 
     /**
      * renders every Element of the given Element[] array in $raw mode.
-     * 
+     *
      * @param array $elements
      */
     private function renderAll(array &$elements, $raw = true)
@@ -292,7 +301,7 @@ class ClassElement extends Element
         }
         reset($elements);
     }
-    
+
     /**
      * Render Traits
      */
