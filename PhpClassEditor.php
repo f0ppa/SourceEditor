@@ -344,7 +344,7 @@ class PhpClassEditor
      */
     public function createTrait(ElementBuilder $e)
     {
-        $tarit = new TraitElement();
+        $tarit = new TraitElement(end($this->classes));
         $this->addElementDocBlock($tarit);
         $tarit->addBodyElement($e);
         $tarit->setName($this->tokenParser->findElementName($e));
